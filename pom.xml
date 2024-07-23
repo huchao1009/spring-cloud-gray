@@ -16,8 +16,7 @@
 
     <name>spring-cloud-gray</name>
 
-    <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/huchao1009/spring-cloud-gray</url>
     <modules>
         <module>spring-cloud-gray-core</module>
         <module>spring-cloud-gray-gateway</module>
@@ -25,6 +24,14 @@
         <module>spring-cloud-gray-openfeign</module>
         <module>spring-cloud-gray-loadbalancer</module>
     </modules>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

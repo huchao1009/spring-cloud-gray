@@ -12,9 +12,6 @@
 
     <name>spring-cloud-gray-gateway</name>
 
-    <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

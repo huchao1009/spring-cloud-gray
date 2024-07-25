@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 /**
  * 自定义灰度负载均衡器
+ * 参考：org.springframework.cloud.loadbalancer.core.RoundRobinLoadBalancer
  * @author double
  * @Date 2024/7/20 17:12
  */
@@ -36,14 +37,27 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
     private final ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
 
-    public GrayLoadBalancer(String serviceId, ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider) {
-        this(new Random().nextInt(1000), serviceId, serviceInstanceListSupplierProvider);
+    /**
+     * @param serviceInstanceListSupplierProvider a provider of
+     * {@link ServiceInstanceListSupplier} that will be used to get available instances
+     * @param serviceId id of the service for which to choose an instance
+     */
+    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+                                  String serviceId) {
+        this(serviceInstanceListSupplierProvider, serviceId, new Random().nextInt(1000));
     }
 
-    public GrayLoadBalancer(int seedPosition, String serviceId, ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider) {
-        this.position = new AtomicInteger(seedPosition);
+    /**
+     * @param serviceInstanceListSupplierProvider a provider of
+     * {@link ServiceInstanceListSupplier} that will be used to get available instances
+     * @param serviceId id of the service for which to choose an instance
+     * @param seedPosition Round Robin element position marker
+     */
+    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+                                  String serviceId, int seedPosition) {
         this.serviceId = serviceId;
         this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
+        this.position = new AtomicInteger(seedPosition);
     }
 
     @Override
@@ -100,12 +114,19 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
         String gray = CollectionUtil.get(headers.get(GrayConstant.HEADER_VERSION_GRAY), 0);
         // 灰度标记不为空并且标记为true, 筛选ServiceInstance
         if (StringUtils.isNotBlank(gray) && StringUtils.equals(GrayConstant.HEADER_VERSION_FLAG_GRAY, gray)) {
-            return instances.stream()
+            // 灰度发布请求，得到新服务实例列表
+            List<ServiceInstance> findInstances =  instances.stream()
                     .filter(instance -> StringUtils.isNotBlank(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY))
                             && gray.equals(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY)))
                     .collect(Collectors.toList());
+            // 存在灰度发布节点
+            if (CollectionUtil.isNotEmpty(findInstances)) {
+                instances = findInstances;
+            }
         } else {
+            //TODO 是否筛选不是灰度的节点
             return instances;
         }
+        return instances;
     }
 }

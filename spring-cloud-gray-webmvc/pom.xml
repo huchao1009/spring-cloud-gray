@@ -7,7 +7,6 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.example</groupId>
     <artifactId>spring-cloud-gray-webmvc</artifactId>
     <packaging>maven-plugin</packaging>
 

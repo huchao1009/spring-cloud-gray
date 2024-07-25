@@ -1,5 +1,5 @@
 # spring-cloud-gray
-基于spring-cloud实现的灰度发布
+基于spring-cloud实现的全链路灰度发布
 
 ## 架构设计
 
@@ -30,8 +30,24 @@ spring-cloud-gray-gateway | 灰度客户端与spring cloud gateway集成的插�
 - spring-boot版本：3.2.4
 - spring-cloud-alibaba版本：2023.0.1.2
 
+## 如何构建
+* main 分支对应的是 Spring Cloud 2023.0.1、spring-cloud-alibaba 2023.0.1.2 与 Spring Boot 3.2.4，最低支持 JDK 17。
 
-### 构建命令
-```shell
+Spring Cloud 使用 Maven 来构建，最快的使用方式是将本项目 clone 到本地，然后执行以下命令：
+```bash
 mvn clean install -Dmaven.test.skip=true
 ```
+
+## 如何使用
+
+### 如何引入依赖
+
+如果需要使用已发布的版本，在 `dependencyManagement` 中添加如下配置。
+```xml
+    <dependency>
+        <groupId>org.github.opensource</groupId>
+        <artifactId>spring-cloud-gray-gateway</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+```
+然后在 `dependencies` 中添加自己所需使用的依赖即可使用。

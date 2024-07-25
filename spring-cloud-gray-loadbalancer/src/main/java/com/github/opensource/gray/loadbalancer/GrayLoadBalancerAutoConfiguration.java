@@ -14,12 +14,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 /**
- * 配置自定义LoadBalancer
+ * 负载均衡配置类，指定使用哪一个负载均衡器
+ * 参考org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientConfiguration
+ *
+ * 不要加@Configuration，如果将负载均衡策略注册为bean这样是不行的。
+ * 因为这样会导致environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);返回为null，后边调用feign时会失败。
+ *
  * @author double
  * @Date 2024/7/20 17:13
  */
-@ConditionalOnClass(value = ReactorServiceInstanceLoadBalancer.class)
-@Configuration
+//@ConditionalOnClass(value = ReactorServiceInstanceLoadBalancer.class)
+//@Configuration(proxyBeanMethods = false)
 public class GrayLoadBalancerAutoConfiguration {
 
     @Bean
@@ -28,6 +33,6 @@ public class GrayLoadBalancerAutoConfiguration {
     public ReactorLoadBalancer<ServiceInstance> grayReactorLoadBalancer(Environment environment,
                                                                         LoadBalancerClientFactory loadBalancerClientFactory) {
         String name = environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);
-        return new GrayLoadBalancer(name, loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class));
+        return new GrayLoadBalancer(loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class), name);
     }
 }

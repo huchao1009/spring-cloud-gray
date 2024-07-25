@@ -42,7 +42,7 @@ mvn clean install -Dmaven.test.skip=true
 
 ### 如何引入依赖
 
-如果需要使用已发布的版本，在 `dependencyManagement` 中添加如下配置。
+网关引入gateway灰度组件
 ```xml
     <dependency>
         <groupId>org.github.opensource</groupId>
@@ -50,4 +50,16 @@ mvn clean install -Dmaven.test.skip=true
         <version>1.0.0-SNAPSHOT</version>
     </dependency>
 ```
-然后在 `dependencies` 中添加自己所需使用的依赖即可使用。
+普通服务引入loadbalancer、openfeign灰度组件
+```xml
+    <dependency>
+        <groupId>org.github.opensource</groupId>
+        <artifactId>spring-cloud-gray-loadbalancer</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.github.opensource</groupId>
+        <artifactId>spring-cloud-gray-openfeign</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+```

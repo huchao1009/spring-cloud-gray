@@ -117,15 +117,17 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
             // 灰度发布请求，得到新服务实例列表
             List<ServiceInstance> findInstances =  instances.stream()
                     .filter(instance -> StringUtils.isNotBlank(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY))
-                            && gray.equals(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY)))
+                            && GrayConstant.HEADER_VERSION_FLAG_GRAY.equals(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY)))
                     .collect(Collectors.toList());
             // 存在灰度发布节点
             if (CollectionUtil.isNotEmpty(findInstances)) {
                 instances = findInstances;
             }
         } else {
-            //TODO 是否筛选不是灰度的节点
-            return instances;
+            instances =  instances.stream()
+                    .filter(instance -> StringUtils.isBlank(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY))
+                            || !GrayConstant.HEADER_VERSION_FLAG_GRAY.equals(instance.getMetadata().get(GrayConstant.HEADER_VERSION_GRAY)))
+                    .collect(Collectors.toList());
         }
         return instances;
     }

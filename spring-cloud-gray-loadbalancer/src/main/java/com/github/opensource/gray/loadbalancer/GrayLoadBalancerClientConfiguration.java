@@ -35,7 +35,9 @@ public class GrayLoadBalancerClientConfiguration {
     @ConditionalOnBean(LoadBalancerClientFactory.class)
     public ReactorLoadBalancer<ServiceInstance> grayReactorLoadBalancer(Environment environment,
                                                                         LoadBalancerClientFactory loadBalancerClientFactory) {
+        //获取微服务名称
         String name = environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);
+        //注意这里注入的是 LazyProvider，这主要因为在注册这个 Bean 的时候相关的 Bean 可能还没有被加载注册，利用 LazyProvider 而不是直接注入所需的 Bean 防止报找不到 Bean 注入的错误。
         return new GrayLoadBalancer(loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class), name);
     }
 }

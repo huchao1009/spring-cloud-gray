@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 
 
 /**
- * 自定义灰度负载均衡器
+ * 自定义灰度负载均衡器，基于灰度的RoundRobin算法
  * 参考：org.springframework.cloud.loadbalancer.core.RoundRobinLoadBalancer
  * @author double
  * @Date 2024/7/20 17:12
  */
 @Slf4j
-public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
+public class GrayRoundRobinLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
     final AtomicInteger position;
 
@@ -42,8 +42,8 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
      * {@link ServiceInstanceListSupplier} that will be used to get available instances
      * @param serviceId id of the service for which to choose an instance
      */
-    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
-                                  String serviceId) {
+    public GrayRoundRobinLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+                                      String serviceId) {
         this(serviceInstanceListSupplierProvider, serviceId, new Random().nextInt(1000));
     }
 
@@ -53,8 +53,8 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
      * @param serviceId id of the service for which to choose an instance
      * @param seedPosition Round Robin element position marker
      */
-    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
-                                  String serviceId, int seedPosition) {
+    public GrayRoundRobinLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+                                      String serviceId, int seedPosition) {
         this.serviceId = serviceId;
         this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
         this.position = new AtomicInteger(seedPosition);

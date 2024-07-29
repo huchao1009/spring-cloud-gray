@@ -17,7 +17,7 @@
 模块 | 描述
 --- | ---
 spring-cloud-gray-core | 框架核心包
-spring-cloud-gray-core | 灰度数据模型/Java Bean定义，client端和server端通用
+spring-cloud-gray-core | 灰度数据模型工具类，所有组件通用
 spring-cloud-gray-loadbalancer | 灰度客户端与spring cloud loadbalancer集成的插件
 spring-cloud-gray-openfeign | 灰度客户端与spring cloud openfeign集成的插件
 spring-cloud-gray-gateway | 灰度客户端与spring cloud gateway集成的插件
